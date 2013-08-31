@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-import os
-import time
 import argparse
 import gzip
 import subprocess
 from datetime import datetime
+
+from utils import cleanDir
 
 backups_ttl = 14 * 86400
 
@@ -30,10 +30,4 @@ f = gzip.open(fname, 'wb')
 f.write(mysql_out)
 f.close()
 
-now = time.time()
-
-for file in os.listdir(args.dir):
-	fpath = os.path.join(args.dir, file)
-	if os.stat(fpath).st_mtime < now - backups_ttl:
-		os.remove(fpath)
-
+cleanDir(args.dir, backups_ttl)
