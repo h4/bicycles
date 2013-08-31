@@ -10,11 +10,11 @@
 -n --filename   - имя файла резервной копии
 """
 
-import os
-import time
 import argparse
 import tarfile
 from datetime import datetime
+
+from utils import cleanDir
 
 backups_ttl = 14 * 86400
 
@@ -29,7 +29,6 @@ args = parser.parse_args()
 dt = datetime.today().strftime('%Y_%m_%d')
 
 fname = '{}/{}__{}.tar.gz'.format(args.dir, args.filename, dt)
-now = time.time()
 
 try:
     archive = tarfile.open(fname, "w:gz")
@@ -38,7 +37,4 @@ try:
 except tarfile.TarError as error:
     pass
 
-for fname in os.listdir(args.dir):
-    fpath = os.path.join(args.dir, fname)
-    if os.stat(fpath).st_mtime < now - backups_ttl:
-        os.remove(fpath)
+cleanDir(args.dir, backups_ttl)
