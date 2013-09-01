@@ -29,6 +29,7 @@ def backup(database, target, username, password):
     f = gzip.open(fname, 'wb')
     f.write(mysql_out)
     f.close()
+    return fname
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='MySQL backup utility')

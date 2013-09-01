@@ -24,7 +24,9 @@ def backup(source, target, filename):
         archive.add(source)
         archive.close()
     except tarfile.TarError as e:
-        pass
+        fname = None
+
+    return fname
 
 
 if __name__ == "__main__":
