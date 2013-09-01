@@ -4,7 +4,6 @@
 """
 Скрипт резервного копирования каталога
 
-Файлы хранятся 14 дней
 Ключи
 -d --dir        - каталог с резервными копиями
 -n --filename   - имя файла резервной копии
@@ -14,27 +13,27 @@ import argparse
 import tarfile
 from datetime import datetime
 
-from utils import cleanDir
 
-backups_ttl = 14 * 86400
+def backup(source, target, filename):
+    dt = datetime.today().strftime('%Y_%m_%d')
 
-parser = argparse.ArgumentParser(description='Directory backup utility')
+    fname = '{}/{}__{}.tar.gz'.format(target, filename, dt)
 
-parser.add_argument('-d', '--dir', help='backups dir')
-parser.add_argument('-n', '--filename', help='backup file name')
-parser.add_argument('target', help='target directory')
+    try:
+        archive = tarfile.open(fname, "w:gz")
+        archive.add(source)
+        archive.close()
+    except tarfile.TarError as e:
+        pass
 
-args = parser.parse_args()
 
-dt = datetime.today().strftime('%Y_%m_%d')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Directory backup utility')
 
-fname = '{}/{}__{}.tar.gz'.format(args.dir, args.filename, dt)
+    parser.add_argument('-d', '--dir', help='path to backups')
+    parser.add_argument('-n', '--filename', help='backup file name')
+    parser.add_argument('source', help='sources directory')
 
-try:
-    archive = tarfile.open(fname, "w:gz")
-    archive.add(args.target)
-    archive.close()
-except tarfile.TarError as error:
-    pass
+    args = parser.parse_args()
 
-cleanDir(args.dir, backups_ttl)
+    backup(args.source, args.dir, args.filename)
