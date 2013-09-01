@@ -1,0 +1,26 @@
+ttl: 14
+
+databases:
+  - test1:
+      user: root
+      password: secret
+      dir: /backup/db
+      ttl: 5
+  - test2:
+      user: root
+      password: secret
+      dir: /backup/db
+
+directories:
+  - dir1:
+      source: /var/www/dir1
+      backup_name: dir
+      target: /backup/sites
+
+remotes:
+  origin:
+    type: webdav
+    url: srv.company.tld/files
+    username: dale
+    password: secret
+    schedule: "034"
